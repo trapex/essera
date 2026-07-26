@@ -10,6 +10,8 @@
 	font-weight: 500;
 	cursor: pointer;
 	transition: border 0.2s;
+	color: inherit;
+	background-color: transparent;
 }
 
 .item:hover:not(.disabled):not(.selected) {

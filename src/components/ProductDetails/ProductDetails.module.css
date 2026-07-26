@@ -32,10 +32,6 @@
 	grid-column: 1 / span 2;
 }
 
-.image {
-
-}
-
 .details {
 	margin-top: 48px;
 	padding: 0 48px;
@@ -77,4 +73,10 @@
 	font-size: 14px;
 	text-decoration: underline;
 	cursor: pointer;
+}
+
+.sizeError {
+	color: var(--red);
+	font-size: 14px;
+	margin-top: 8px;
 }

@@ -2,19 +2,23 @@ import { SizeItemProps } from './SizeItem.props';
 import styles from './SizeItem.module.css';
 import clsx from 'clsx';
 
-export const SizeItem = ({ sizeOption, selected = false, onSizeSelect, children, className, ...props }: SizeItemProps) => {
+export const SizeItem = ({ sizeOption, selected = false, onSizeSelect, className, ...props }: SizeItemProps) => {
 	const { size, label, quantity, inStock } = sizeOption;
 	const isDisabled = (inStock === false || quantity === 0);
 
 	return (
-		<div className={clsx(styles.item, className, {
-			[styles.selected]: selected,
-			[styles.disabled]: isDisabled,
-		})}
-			 onClick={() => !isDisabled && onSizeSelect?.(size)}
-			 {...props}
+		<button
+			type="button"
+			className={clsx(styles.item, className, {
+				[styles.selected]: selected,
+				[styles.disabled]: isDisabled,
+			})}
+			onClick={() => onSizeSelect?.(size)}
+			disabled={isDisabled}
+			aria-pressed={selected}
+			{...props}
 		>
 			{label || size}
-		</div>
+		</button>
 	);
 };

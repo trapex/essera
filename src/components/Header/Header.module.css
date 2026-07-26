@@ -40,6 +40,7 @@ header.transparent {
 	margin: 0 auto;
 	background: url("/logo/essera-black-2.png") center / 100% no-repeat;
 }
+
 @media (min-width: 1023px) {
 	.logoImg {
 		height: 64px;
@@ -67,6 +68,7 @@ header.transparent .logoImg {
 	margin-right: 10px;
 	cursor: pointer;
 }
+
 @media (min-width: 1023px) {
 	.list li {
 		margin-right: 16px;
@@ -101,6 +103,7 @@ header.transparent .logoImg {
 	justify-items: center;
 	text-align: right;
 }
+
 .profile .icon {
 	margin-left: 10px;
 	cursor: pointer;
@@ -123,7 +126,30 @@ header.transparent .logoImg {
 }
 
 .cart {
+	position: relative;
 	margin-top: -2px;
+	background: transparent;
+	border: none;
+	padding: 0;
+	color: inherit;
+}
+
+.cartBadge {
+	position: absolute;
+	top: -6px;
+	right: -6px;
+	min-width: 18px;
+	height: 18px;
+	padding: 0 4px;
+	border-radius: 9px;
+	background: var(--soft-charcoal);
+	color: var(--white);
+	font-family: var(--font-inter), sans-serif;
+	font-size: 10px;
+	font-weight: 500;
+	display: flex;
+	align-items: center;
+	justify-content: center;
 }
 
 /* Search */
@@ -137,7 +163,7 @@ header.transparent .logoImg {
 	display: flex;
 	align-items: center;
 	padding: 24px;
-	box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+	box-shadow: 0 4px 16px rgba(0, 0, 0, 0.07);
 }
 
 .searchInput {

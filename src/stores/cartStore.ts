@@ -53,6 +53,17 @@ type CartState = {
 	subtotal: () => number;
 };
 
+const safeStorage = () => {
+	if (typeof window === 'undefined') {
+		return {
+			getItem: () => null,
+			setItem: () => { },
+			removeItem: () => { },
+		} as unknown as Storage;
+	}
+	return localStorage;
+};
+
 export const useCartStore = create<CartState>()(
 	persist(
 		(set, get) => ({
@@ -129,7 +140,7 @@ export const useCartStore = create<CartState>()(
 		}),
 		{
 			name: 'cart-v1',
-			storage: createJSONStorage(() => localStorage),
+			storage: createJSONStorage(safeStorage),
 			partialize: (s) => ({ items: s.items }),
 		}
 	)

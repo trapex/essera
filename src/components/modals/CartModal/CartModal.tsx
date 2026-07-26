@@ -7,7 +7,8 @@ import styles from './cartModal.module.css';
 import { Button, CartItem } from '@/components';
 import { useCartStore } from '@/stores/cartStore';
 
-export const CartModal = ({ onClose }: CartModalProps) => {
+export const CartModal = ({ onClose: _onClose }: CartModalProps) => {
+	void _onClose;
 	// Read cart entries from Zustand store (UI-friendly data only)
 	const items = useCartStore((s) => s.items);
 
@@ -31,8 +32,15 @@ export const CartModal = ({ onClose }: CartModalProps) => {
 	};
 
 	return (
-		<div className={clsx(styles.container)}>
-			<div className={clsx(styles.title)}>My Bag</div>
+		<div
+			className={clsx(styles.container)}
+			role="dialog"
+			aria-modal="true"
+			aria-labelledby="cart-modal-title"
+		>
+			<div id="cart-modal-title" className={clsx(styles.title)}>
+				My Bag
+			</div>
 
 			<div className={clsx(styles.list)}>
 				{isEmpty ? (

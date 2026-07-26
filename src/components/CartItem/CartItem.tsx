@@ -4,7 +4,7 @@ import styles from './CartItem.module.css';
 import Image from 'next/image';
 import clsx from 'clsx';
 
-export const CartItem = ({product, size, color, quantity, onRemove, onQuantityChange, className, ...props}: CartItemProps) => {
+export const CartItem = ({ product, size, color, quantity, onRemove, onQuantityChange, className, ...props }: CartItemProps) => {
 
 	return (
 		<div className={clsx(styles.cartItem, className)} {...props}>
@@ -19,7 +19,7 @@ export const CartItem = ({product, size, color, quantity, onRemove, onQuantityCh
 			</div>
 			<div className={clsx(styles.info)}>
 				<div className={clsx(styles.title)}>{product.title}</div>
-				<div className={clsx(styles.price)}>${product.price}</div>
+				<div className={clsx(styles.price)}>${product.price.toFixed(2)}</div>
 				<div className={clsx(styles.meta)}>
 					<span>{color}</span>
 					<span>{size}</span>

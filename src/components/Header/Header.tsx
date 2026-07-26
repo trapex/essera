@@ -3,12 +3,14 @@ import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 import { useScrollY } from '@/hooks/useScrollY';
 import { useModal } from '@/contexts/ModalContext';
+import { useCartStore } from '@/stores/cartStore';
 import { HeaderProps } from './Header.props';
 import styles from './Header.module.css';
 import clsx from 'clsx';
 import Link from 'next/link';
 
-export const Header = ({ children, className, ...props }: HeaderProps) => {
+export const Header = ({ children: _children, className, ...props }: HeaderProps) => {
+	void _children;
 	const pathname = usePathname();
 	const isHome = pathname === '/';
 
@@ -17,6 +19,7 @@ export const Header = ({ children, className, ...props }: HeaderProps) => {
 
 	const [isSearchOpen, setIsSearchOpen] = useState(false);
 
+	const totalItems = useCartStore((s) => s.items.reduce((acc, it) => acc + it.quantity, 0));
 	const modal = useModal();
 
 	const handleBagClick = () => {
@@ -26,7 +29,7 @@ export const Header = ({ children, className, ...props }: HeaderProps) => {
 	};
 
 	return (
-		<header className={clsx(styles.header, {[styles.transparent]: isHome}, { [styles.scrolled]: isScrolled }, className)} {...props}>
+		<header className={clsx(styles.header, { [styles.transparent]: isHome }, { [styles.scrolled]: isScrolled }, className)} {...props}>
 			<nav className={clsx(styles.nav)}>
 				<ul className={clsx(styles.list)}>
 					<li><Link href='/new-arrivals'>new</Link></li>
@@ -45,16 +48,19 @@ export const Header = ({ children, className, ...props }: HeaderProps) => {
 					tabIndex={0}
 					role="button"
 					aria-label="Open search"
-					style={{cursor: 'pointer'}}
+					style={{ cursor: 'pointer' }}
 				>
-				  search
+					search
 				</span>
-				<span
-					className={clsx("material-icons-outlined", styles.icon, styles.cart)}
+				<button
+					className={clsx('material-icons-outlined', styles.icon, styles.cart)}
 					onClick={handleBagClick}
+					aria-label={`Open shopping bag (${totalItems} ${totalItems === 1 ? 'item' : 'items'})`}
+					type="button"
 				>
 					shopping_bag
-				</span>
+					{totalItems > 0 && <span className={styles.cartBadge}>{totalItems}</span>}
+				</button>
 			</div>
 			{isSearchOpen && (
 				<div className={styles.searchBlock}>

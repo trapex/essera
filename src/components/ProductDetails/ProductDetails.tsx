@@ -17,11 +17,12 @@ import type { AccordionItem } from '@/interfaces/accordion.interface';
 import { useCartStore } from '@/stores/cartStore';
 
 export const ProductDetails = ({
-								   product,
-								   className,
-								   onFavoriteToggle, // not used yet, but kept for API parity
-								   ...props
-							   }: ProductDetailsProps) => {
+	product,
+	className,
+	onFavoriteToggle: _onFavoriteToggle, // not used yet, but kept for API parity
+	...props
+}: ProductDetailsProps) => {
+	void _onFavoriteToggle;
 	const { title, basePrice, discountPrice, label } = product;
 
 	/* ------------------ Variant, images, sizes ------------------ */
@@ -89,6 +90,12 @@ export const ProductDetails = ({
 
 	const addFromProduct = useCartStore((s) => s.addFromProduct);
 	const [selectedSize, setSelectedSize] = useState<string | null>(null);
+	const [sizeError, setSizeError] = useState(false);
+
+	const handleSizeSelect = (size: string) => {
+		setSelectedSize(size);
+		setSizeError(false);
+	};
 
 	const handleAddToBag = () => {
 		if (!currentVariant) return;
@@ -96,7 +103,6 @@ export const ProductDetails = ({
 		const hasSizes = (currentVariant.sizes?.length ?? 0) > 0;
 		let sizeObj: SizeOption | null = null;
 
-		// If the product has sizes, require a selected valid size in stock
 		if (hasSizes) {
 			sizeObj =
 				currentVariant.sizes.find(
@@ -108,19 +114,15 @@ export const ProductDetails = ({
 				sizeObj.inStock === false ||
 				(typeof sizeObj.quantity === 'number' && sizeObj.quantity <= 0)
 			) {
-				// Optionally show a toast here: "Please select an available size"
+				setSizeError(true);
 				return;
 			}
 		}
 
 		addFromProduct({ product, variant: currentVariant, size: sizeObj, quantity: 1 });
-		// Optionally open cart modal / show toast here.
+		setSizeError(false);
+		modal.open('cartModal', { type: 'right' });
 	};
-
-	const buttonDisabled =
-		!!currentVariant &&
-		(currentVariant.sizes?.length ?? 0) > 0 &&
-		!selectedSize;
 
 	/* ------------------ Render ------------------ */
 
@@ -164,10 +166,15 @@ export const ProductDetails = ({
 								className={clsx(styles.sizeItem)}
 								sizeOption={sizeOption}
 								selected={selectedSize === sizeOption.size}
-								onSizeSelect={setSelectedSize}
+								onSizeSelect={handleSizeSelect}
 							/>
 						))}
 					</div>
+					{sizeError && (
+						<div className={styles.sizeError} role="alert">
+							Please select a size
+						</div>
+					)}
 				</div>
 
 				{/* Add to bag */}
@@ -177,7 +184,6 @@ export const ProductDetails = ({
 						size="md"
 						color="neutral"
 						onClick={handleAddToBag}
-						disabled={buttonDisabled}
 					>
 						Add to bag
 					</Button>
