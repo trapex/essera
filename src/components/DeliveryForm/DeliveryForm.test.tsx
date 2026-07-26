@@ -6,15 +6,15 @@ describe('DeliveryForm', () => {
 		render(<DeliveryForm />);
 
 		const fields = [
-			'Country/Region',
-			'First Name',
-			'Last Name',
-			'Address',
-			'Apartment, suite, etc. (optional)',
-			'City',
-			'State',
-			'ZIP Code',
-			'Phone',
+			'Country/Region *',
+			'First Name *',
+			'Last Name *',
+			'Address *',
+			'Apartment, suite, etc.',
+			'City *',
+			'State *',
+			'ZIP Code *',
+			'Phone *',
 		];
 
 		fields.forEach((labelText) => {

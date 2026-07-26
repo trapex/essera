@@ -97,6 +97,31 @@ The next development phase is focused on completing the checkout experience and 
 
 ---
 
+## 🔧 Environment Variables
+
+Create a `.env.local` file from `.env.example` and fill in the required values:
+
+| Variable | Purpose |
+|---|---|
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase public API key |
+| `NEXT_PUBLIC_API_URL` | Essera backend API base URL |
+| `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` | Google Maps Platform API key for checkout address autocomplete |
+
+## 🗺 Google Cloud Setup
+
+To enable address autocomplete on the checkout page:
+
+- Create or select a project in the [Google Cloud Console](https://console.cloud.google.com/).
+- Enable billing.
+- Enable the **Maps JavaScript API**.
+- Enable the **Places API** (or **Places API (New)** if you switch to the new endpoints).
+- Create an API key and restrict it to the required APIs.
+- Add HTTP referrer restrictions for the allowed Essera domains.
+- Set `NEXT_PUBLIC_GOOGLE_MAPS_API_KEY` in `.env.local`.
+
+Do not commit the real API key to source control.
+
 ## ⚙️ Local Development
 
 Install dependencies and start the development server:

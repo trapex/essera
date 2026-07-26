@@ -24,4 +24,5 @@ export * from './DeliveryForm/DeliveryForm';
 export * from './UserInitializer/UserInitializer';
 export * from './Input/Input';
 export * from './Select/Select';
+export * from './AddressAutocompleteInput/AddressAutocompleteInput';
 export * from './Textarea/Textarea';
