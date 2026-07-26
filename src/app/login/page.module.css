@@ -46,20 +46,11 @@
 	gap: 6px;
 }
 
-.fieldLabel {
-	font-size: 13px;
-	color: var(--warm-gray);
-}
-
 .fieldInput {
-	width: 100%;
-	height: var(--control-height);
-	padding: 0 12px;
-	border: 1px solid var(--border-color);
+	border-color: var(--border-color);
 	background: var(--white);
-	color: var(--soft-charcoal);
-	outline: none;
-	transition: border-color .15s ease, box-shadow .15s ease, background .15s ease;
+	padding-left: 12px;
+	padding-right: 12px;
 }
 
 .fieldInput:focus {
@@ -73,6 +64,7 @@
 	margin: 0 0 12px;
 	font-size: 14px;
 }
+
 .alertError {
 	color: var(--white);
 	background: var(--red);
@@ -86,12 +78,16 @@
 	color: var(--warm-gray);
 	font-size: 12px;
 }
+
 .link {
 	color: var(--soft-charcoal);
 	text-decoration: underline;
 	text-underline-offset: 3px;
 }
-.link:hover { color: var(--rich-brown); }
+
+.link:hover {
+	color: var(--rich-brown);
+}
 
 @media (max-width: 640px) {
 	.card {
@@ -100,16 +96,19 @@
 		max-width: 360px;
 		transform: translateY(-4vh);
 	}
+
 	.title {
 		font-size: 28px;
 	}
 }
+
 @media (max-width: 400px) {
 	.card {
 		max-width: 94vw;
 		padding: 18px;
 		transform: none;
 	}
+
 	.title {
 		font-size: 26px;
 	}

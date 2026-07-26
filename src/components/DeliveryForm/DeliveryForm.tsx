@@ -2,126 +2,125 @@
 import { DeliveryFormProps } from './DeliveryForm.props';
 import styles from './DeliveryForm.module.css';
 import clsx from 'clsx';
+import { Input } from '@/components/Input/Input';
 
 export const DeliveryForm = ({ children, className, ...props }: DeliveryFormProps) => {
 
 	return (
-		<form className={clsx(styles.form)} autoComplete="off">
+		<form className={clsx(styles.form, className)} autoComplete="off" {...props}>
 			<div className={clsx(styles.field)}>
-				{/*<label htmlFor="country">Country/Region</label>*/}
-				<input
+				<Input
+					label="Country/Region"
 					type="text"
 					id="country"
 					name="country"
 					required
 					minLength={2}
-					placeholder="Country/Region"
+					autoComplete="country-name"
+					className={styles.control}
 				/>
 			</div>
 			<div className={clsx(styles.group)}>
 				<div className={clsx(styles.field)}>
-					<label htmlFor="firstName">First Name</label>
-					<input
+					<Input
+						label="First Name"
 						type="text"
 						id="firstName"
 						name="firstName"
 						required
 						minLength={2}
-						placeholder="First Name"
+						autoComplete="given-name"
+						className={styles.control}
 					/>
 				</div>
 				<div className={clsx(styles.field)}>
-					<label htmlFor="lastName">Last Name</label>
-					<input
+					<Input
+						label="Last Name"
 						type="text"
 						id="lastName"
 						name="lastName"
 						required
 						minLength={2}
-						placeholder="Last Name"
+						autoComplete="family-name"
+						className={styles.control}
 					/>
 				</div>
 			</div>
 			<div className={clsx(styles.field)}>
-				<label htmlFor="address">Address</label>
-				<input
+				<Input
+					label="Address"
 					type="text"
 					id="address"
 					name="address"
 					required
 					minLength={2}
-					placeholder="Address"
+					autoComplete="street-address"
+					className={styles.control}
 				/>
 			</div>
 			<div className={clsx(styles.field)}>
-				<label htmlFor="apartments">Apartment, suite, etc. (optional)</label>
-				<input
+				<Input
+					label="Apartment, suite, etc. (optional)"
 					type="text"
 					id="apartments"
 					name="apartments"
 					required
 					minLength={2}
-					placeholder="Apartment, suite, etc. (optional)"
+					autoComplete="address-line2"
+					className={styles.control}
 				/>
 			</div>
 			<div className={clsx(styles.group)}>
 				<div className={clsx(styles.field)}>
-					<label htmlFor="city">City</label>
-					<input
+					<Input
+						label="City"
 						type="text"
 						id="city"
 						name="city"
 						required
 						minLength={2}
-						placeholder="City"
+						autoComplete="address-level2"
+						className={styles.control}
 					/>
 				</div>
 				<div className={clsx(styles.field)}>
-					<label htmlFor="state">State</label>
-					<input
+					<Input
+						label="State"
 						type="text"
 						id="state"
 						name="state"
 						required
 						minLength={2}
-						placeholder="State"
+						autoComplete="address-level1"
+						className={styles.control}
 					/>
 				</div>
 				<div className={clsx(styles.field)}>
-					<label htmlFor="zip">ZIP Code</label>
-					<input
+					<Input
+						label="ZIP Code"
 						type="text"
 						id="zip"
 						name="zip"
 						required
 						minLength={2}
-						placeholder="ZIP Code"
+						autoComplete="postal-code"
+						className={styles.control}
 					/>
 				</div>
 			</div>
 			<div className={clsx(styles.field)}>
-				<label htmlFor="phone">Phone</label>
-				<input
+				<Input
+					label="Phone"
 					type="text"
 					id="phone"
 					name="phone"
 					required
 					minLength={2}
-					placeholder="Phone"
+					autoComplete="tel"
+					className={styles.control}
 				/>
 			</div>
-
-			{/*<div className={clsx(styles.field)}>*/}
-			{/*	<label htmlFor="email">Email</label>*/}
-			{/*	<input*/}
-			{/*		type="email"*/}
-			{/*		id="email"*/}
-			{/*		name="email"*/}
-			{/*		required*/}
-			{/*		placeholder="your@email.com"*/}
-			{/*	/>*/}
-			{/*</div>*/}
-
+			{children}
 		</form>
 	);
 };

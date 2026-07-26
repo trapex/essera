@@ -9,14 +9,6 @@
 	flex: 1;
 }
 
-.input:focus {
-	border-color: inherit;
-}
-
-.apply {
-
-}
-
 .error {
 	position: absolute;
 	left: 0;

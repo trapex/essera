@@ -1,3 +1,9 @@
+.root {
+	position: relative;
+	display: block;
+	width: 100%;
+}
+
 .input {
 	width: 100%;
 	height: var(--control-height);
@@ -15,8 +21,13 @@
 	transition: border-color .15s ease, box-shadow .15s ease, background-color .15s ease;
 }
 
+.withLabel {
+	height: 48px;
+	padding: 18px 10px 6px;
+}
+
 .input::placeholder {
-	/*color: var(--placeholder);*/
+	color: var(--warm-gray);
 }
 
 .input:hover:not(:disabled) {
@@ -32,6 +43,7 @@
 .invalid {
 	border-color: var(--red-dark);
 }
+
 .invalid:focus {
 	box-shadow: 0 0 0 4px rgba(216, 115, 115, 0.15);
 }
@@ -44,6 +56,59 @@
 	cursor: not-allowed;
 }
 
+/* Floating label */
+.label {
+	position: absolute;
+	left: 10px;
+	top: 50%;
+	transform: translateY(-50%);
+	font-size: 15px;
+	color: var(--warm-gray);
+	transition: all .15s ease;
+	transform-origin: left top;
+	cursor: text;
+}
+
+.labelFloating {
+	top: 6px;
+	transform: translateY(0) scale(0.75);
+}
+
+/* Autofill detection */
+@-webkit-keyframes onAutoFillStart {
+	from {}
+
+	to {}
+}
+
+@keyframes onAutoFillStart {
+	from {}
+
+	to {}
+}
+
+@-webkit-keyframes onAutoFillCancel {
+	from {}
+
+	to {}
+}
+
+@keyframes onAutoFillCancel {
+	from {}
+
+	to {}
+}
+
+.input:-webkit-autofill {
+	animation-name: onAutoFillStart;
+	animation-duration: 0.001s;
+}
+
+.input:not(:-webkit-autofill) {
+	animation-name: onAutoFillCancel;
+	animation-duration: 0.001s;
+}
+
 /* Icons */
 .icon {
 	position: absolute;
@@ -52,13 +117,11 @@
 	color: #8c8c8c;
 	pointer-events: none;
 }
-.iconLeft  { left: 12px; }
-.iconRight { right: 12px; }
 
-
-.withLeftIcon  {
-	/*padding-left: calc(var(--control-pad-x) + 22px + var(--icon-gap));*/
+.iconLeft {
+	left: 12px;
 }
-.withRightIcon {
-	/*padding-right: calc(var(--control-pad-x) + 22px + var(--icon-gap));*/
+
+.iconRight {
+	right: 12px;
 }

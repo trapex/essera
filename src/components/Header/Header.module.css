@@ -168,10 +168,17 @@ header.transparent .logoImg {
 
 .searchInput {
 	flex: 1;
-	padding: 8px 16px;
-	border: 1px solid var(--warm-gray);
+}
+
+.searchInput .searchControl {
+	height: 40px;
+	padding: 12px 16px 6px;
+	border-color: var(--warm-gray);
 	border-radius: 6px;
-	outline: none;
+}
+
+.searchInput .searchControl:focus {
+	border-color: var(--soft-charcoal);
 }
 
 .closeSearch {

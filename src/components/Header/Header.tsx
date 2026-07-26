@@ -8,6 +8,7 @@ import { HeaderProps } from './Header.props';
 import styles from './Header.module.css';
 import clsx from 'clsx';
 import Link from 'next/link';
+import { Input } from '@/components/Input/Input';
 
 export const Header = ({ children: _children, className, ...props }: HeaderProps) => {
 	void _children;
@@ -64,12 +65,17 @@ export const Header = ({ children: _children, className, ...props }: HeaderProps
 			</div>
 			{isSearchOpen && (
 				<div className={styles.searchBlock}>
-					<input
-						type="text"
-						placeholder="Search…"
-						className={styles.searchInput}
-						autoFocus
-					/>
+					<div className={styles.searchInput}>
+						<Input
+							label="Search"
+							type="text"
+							id="search"
+							name="search"
+							autoComplete="off"
+							autoFocus
+							className={styles.searchControl}
+						/>
+					</div>
 					<button
 						className={styles.closeSearch}
 						onClick={() => setIsSearchOpen(false)}

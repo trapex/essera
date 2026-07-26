@@ -6,4 +6,5 @@ export interface TextareaProps
 	leftIcon?: ReactNode;
 	rightIcon?: ReactNode;
 	className?: string;
+	label?: string;
 }

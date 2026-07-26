@@ -1,3 +1,9 @@
+.root {
+	position: relative;
+	display: block;
+	width: 100%;
+}
+
 .textarea {
 	min-height: 120px;
 	width: 100%;
@@ -6,4 +12,46 @@
 	border-radius: 0;
 	resize: vertical;
 	font-weight: 300;
+	outline: none;
+}
+
+.withLabel {
+	padding: 28px 10px 10px;
+	min-height: 120px;
+}
+
+.textarea:focus {
+	border-color: var(--soft-charcoal);
+}
+
+/* Floating label */
+.label {
+	position: absolute;
+	left: 10px;
+	top: 14px;
+	transform: none;
+	font-size: 15px;
+	color: var(--warm-gray);
+	transition: all .15s ease;
+	transform-origin: left top;
+	cursor: text;
+	pointer-events: none;
+}
+
+.labelFloating {
+	top: 6px;
+	transform: translateY(0) scale(0.75);
+}
+
+/* Error */
+.invalid {
+	border-color: var(--red-dark);
+}
+
+/* Disabled */
+.disabled,
+.textarea:disabled {
+	background: #f6f4f2;
+	color: #9b9390;
+	cursor: not-allowed;
 }

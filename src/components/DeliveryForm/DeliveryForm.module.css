@@ -19,20 +19,13 @@
 	gap: 6px;
 }
 
-.form input,
-.form textarea {
-	padding: 10px;
-	border: 1px solid var(--pearl-gray);
+.form .control {
 	border-radius: 6px;
 	font-size: 16px;
-	font-family: inherit;
-	resize: vertical;
 }
 
-.form input:focus,
-.form textarea:focus {
+.form .control:focus {
 	border-color: var(--almond-milk);
-	outline: none;
 }
 
 .button {

@@ -9,19 +9,20 @@ import type { User } from '@/interfaces/user.interface';
 import clsx from 'clsx';
 import styles from './page.module.css';
 import { Button } from '@/components';
+import { Input } from '@/components/Input/Input';
 
 export default function LoginPage() {
 	const router = useRouter();
 	const supabase = createClientComponentClient();
 
 	const setAuthToken = useUserStore((s) => s.setAuthToken);
-	const setProfile   = useUserStore((s) => s.setProfile);
-	const clearUser    = useUserStore((s) => s.clearUser);
+	const setProfile = useUserStore((s) => s.setProfile);
+	const clearUser = useUserStore((s) => s.clearUser);
 
-	const [email, setEmail]       = useState('');
+	const [email, setEmail] = useState('');
 	const [password, setPassword] = useState('');
-	const [pending, setPending]   = useState(false);
-	const [error, setError]       = useState<string | null>(null);
+	const [pending, setPending] = useState(false);
+	const [error, setError] = useState<string | null>(null);
 
 	const afterAuthSuccess = async () => {
 		const { data: { session } } = await supabase.auth.getSession();
@@ -74,33 +75,31 @@ export default function LoginPage() {
 				)}
 
 				<form className={styles.form} onSubmit={handleSubmit}>
-					<label className={styles.field}>
-						<span className={styles.fieldLabel}>Email</span>
-						<input
-							className={styles.fieldInput}
-							type="email"
-							autoComplete="email"
-							placeholder="you@example.com"
-							value={email}
-							onChange={(e) => setEmail(e.target.value)}
-							disabled={pending}
-							required
-						/>
-					</label>
+					<Input
+						label="Email"
+						type="email"
+						id="email"
+						name="email"
+						autoComplete="email"
+						value={email}
+						onChange={(e) => setEmail(e.target.value)}
+						disabled={pending}
+						required
+						className={styles.fieldInput}
+					/>
 
-					<label className={styles.field}>
-						<span className={styles.fieldLabel}>Password</span>
-						<input
-							className={styles.fieldInput}
-							type="password"
-							autoComplete="current-password"
-							placeholder="••••••••"
-							value={password}
-							onChange={(e) => setPassword(e.target.value)}
-							disabled={pending}
-							required
-						/>
-					</label>
+					<Input
+						label="Password"
+						type="password"
+						id="password"
+						name="password"
+						autoComplete="current-password"
+						value={password}
+						onChange={(e) => setPassword(e.target.value)}
+						disabled={pending}
+						required
+						className={styles.fieldInput}
+					/>
 
 					<Button
 						type="submit"

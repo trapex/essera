@@ -6,4 +6,5 @@ export interface InputProps
 	leftIcon?: ReactNode;
 	rightIcon?: ReactNode;
 	className?: string;
+	label?: string;
 }

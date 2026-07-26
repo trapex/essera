@@ -3,9 +3,10 @@ import { useState } from 'react';
 import { PromocodeInputProps } from './PromocodeInput.props';
 import styles from './PromocodeInput.module.css';
 import { Button } from '@/components';
+import { Input } from '@/components/Input/Input';
 import clsx from 'clsx';
 
-export const PromocodeInput = ({onApply, isLoading = false, error = '', className, ...props}: PromocodeInputProps) => {
+export const PromocodeInput = ({ onApply, isLoading = false, error = '', className, ...props }: PromocodeInputProps) => {
 	const [code, setCode] = useState('');
 
 	const handleApply = (e: React.FormEvent) => {
@@ -21,17 +22,19 @@ export const PromocodeInput = ({onApply, isLoading = false, error = '', classNam
 			onSubmit={handleApply}
 			{...props}
 		>
-			<input
-				type="text"
-				className={styles.input}
-				placeholder="Promo code"
-				value={code}
-				onChange={e => setCode(e.target.value)}
-				disabled={isLoading}
-				autoComplete="off"
-			/>
+			<div className={styles.input}>
+				<Input
+					label="Promo code"
+					type="text"
+					id="promocode"
+					name="promocode"
+					value={code}
+					onChange={(e) => setCode(e.target.value)}
+					disabled={isLoading}
+					autoComplete="off"
+				/>
+			</div>
 			<Button
-				className={clsx(styles.apply)}
 				type="submit"
 				disabled={isLoading || !code.trim()}
 			>

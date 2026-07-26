@@ -1,6 +1,7 @@
-import { DetailedHTMLProps, HTMLAttributes } from 'react';
+import { ReactNode } from 'react';
 
 
-export interface ContactFormProps extends DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement> {
-
+export interface ContactFormProps {
+	className?: string;
+	children?: ReactNode;
 }

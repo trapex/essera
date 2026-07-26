@@ -1,6 +1,57 @@
+.root {
+	position: relative;
+	display: block;
+	width: 100%;
+}
+
 .select {
 	width: 100%;
 	height: var(--control-height);
 	padding: 10px;
 	border: 1px solid var(--pearl-gray);
+	outline: none;
+	font-size: 15px;
+	line-height: 1;
+	background: transparent;
+}
+
+.withLabel {
+	height: 48px;
+	padding: 18px 10px 6px;
+}
+
+.select:focus {
+	border-color: var(--soft-charcoal);
+}
+
+/* Floating label */
+.label {
+	position: absolute;
+	left: 10px;
+	top: 50%;
+	transform: translateY(-50%);
+	font-size: 15px;
+	color: var(--warm-gray);
+	transition: all .15s ease;
+	transform-origin: left top;
+	cursor: text;
+	pointer-events: none;
+}
+
+.labelFloating {
+	top: 6px;
+	transform: translateY(0) scale(0.75);
+}
+
+/* Error */
+.invalid {
+	border-color: var(--red-dark);
+}
+
+/* Disabled */
+.disabled,
+.select:disabled {
+	background: #f6f4f2;
+	color: #9b9390;
+	cursor: not-allowed;
 }

@@ -6,4 +6,5 @@ export interface SelectProps
 	leftIcon?: ReactNode;
 	rightIcon?: ReactNode;
 	className?: string;
+	label?: string;
 }
