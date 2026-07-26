@@ -2,3 +2,13 @@
 	font-size: 20px;
 	margin-bottom: 16px;
 }
+
+.checkout {
+	padding: 0;
+}
+
+@media (max-width: 767px) {
+	.checkout {
+		padding: 0 16px 16px;
+	}
+}
