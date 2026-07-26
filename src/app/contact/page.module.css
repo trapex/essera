@@ -1,13 +1,41 @@
 .main {
-	max-width: 1200px;
 	margin: 0 auto 64px auto;
+	padding: 0 12px;
+}
+
+@media (min-width: 1023px) {
+	.main {
+		max-width: 1200px;
+		padding: 0;
+	}
 }
 
 .flex {
 	display: flex;
+	flex-wrap: wrap;
 	justify-content: space-between;
 }
 
 .contact {
-	width: 50%;
+	width: 100%;
 }
+@media (min-width: 1023px) {
+	.contact {
+		width: 50%;
+	}
+}
+
+.image {
+	display: none;
+}
+
+@media (min-width: 1023px) {
+	.image {
+		display: block;
+		width: 466px;
+		height: 700px;
+		background: url("/img/IMGL8305_.jpg") center / 100% 100% no-repeat;
+	}
+}
+
+

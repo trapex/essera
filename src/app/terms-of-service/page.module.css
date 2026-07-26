@@ -1,12 +1,25 @@
 .main {
-	max-width: 1200px;
 	margin: 0 auto 64px auto;
+	padding: 0 12px;
+}
+
+@media (min-width: 1023px) {
+	.main {
+		max-width: 1200px;
+		padding: 0;
+	}
 }
 
 .subtitle {
-	margin-top: 24px;
-	font-size: 20px;
+	margin-top: 16px;
+	font-size: 18px;
 	color: var(--warm-gray);
+}
+@media (min-width: 1023px) {
+	.subtitle {
+		margin-top: 24px;
+		font-size: 20px;
+	}
 }
 
 .updated span {

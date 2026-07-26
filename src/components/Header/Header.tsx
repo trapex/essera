@@ -5,7 +5,6 @@ import { useScrollY } from '@/hooks/useScrollY';
 import { useModal } from '@/contexts/ModalContext';
 import { HeaderProps } from './Header.props';
 import styles from './Header.module.css';
-import Image from 'next/image'
 import clsx from 'clsx';
 import Link from 'next/link';
 
@@ -15,12 +14,6 @@ export const Header = ({ children, className, ...props }: HeaderProps) => {
 
 	const scrollY = useScrollY()
 	const isScrolled = scrollY > 50
-
-	const logoSrc = !isHome
-		? '/logo/essera-black-2.png'
-		: isScrolled
-			? '/logo/essera-black-2.png'
-			: '/logo/essera-white-2.png'
 
 	const [isSearchOpen, setIsSearchOpen] = useState(false);
 
@@ -42,7 +35,7 @@ export const Header = ({ children, className, ...props }: HeaderProps) => {
 			</nav>
 			<div className={clsx(styles.logo)}>
 				<Link href="/">
-					<Image src={logoSrc} alt="Essera logo" width={230} height={64} />
+					<div className={clsx(styles.logoImg)}></div>
 				</Link>
 			</div>
 			<div className={clsx(styles.profile)}>

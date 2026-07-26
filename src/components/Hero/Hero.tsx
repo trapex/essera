@@ -1,7 +1,6 @@
 import { HeroProps } from './Hero.props';
 import styles from './Hero.module.css';
 import clsx from 'clsx';
-import Image from 'next/image'
 
 export const Hero = ({ children, className, ...props }: HeroProps) => {
 	return (

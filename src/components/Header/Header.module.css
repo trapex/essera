@@ -9,7 +9,13 @@
 	align-items: center;
 	/*height: 94px;*/
 	height: var(--header-height);
-	padding: 0 24px;
+	padding: 0 12px;
+}
+
+@media (min-width: 1023px) {
+	.header {
+		padding: 0 24px;
+	}
 }
 
 header.transparent {
@@ -24,6 +30,31 @@ header.transparent {
 	color: var(--black);
 }
 
+.logo {
+	text-align: center;
+}
+
+.logoImg {
+	height: 48px;
+	width: 172px;
+	margin: 0 auto;
+	background: url("/logo/essera-black-2.png") center / 100% no-repeat;
+}
+@media (min-width: 1023px) {
+	.logoImg {
+		height: 64px;
+		width: 230px;
+	}
+}
+
+header.transparent .logoImg {
+	background-image: url("/logo/essera-white-2.png");
+}
+
+.header.scrolled .logoImg {
+	background-image: url("/logo/essera-black-2.png");
+}
+
 .nav {
 	text-transform: uppercase;
 }
@@ -33,9 +64,15 @@ header.transparent {
 }
 
 .list li {
-	margin-right: 16px;
+	margin-right: 10px;
 	cursor: pointer;
 }
+@media (min-width: 1023px) {
+	.list li {
+		margin-right: 16px;
+	}
+}
+
 .list li:last-child {
 	margin-right: 0;
 }
@@ -59,18 +96,20 @@ header.transparent {
 	color: inherit;
 }
 
-.logo {
-	text-align: center;
-}
-
 .profile {
 	display: flex;
 	justify-items: center;
 	text-align: right;
 }
 .profile .icon {
-	margin-left: 16px;
+	margin-left: 10px;
 	cursor: pointer;
+}
+
+@media (min-width: 1023px) {
+	.profile .icon {
+		margin-left: 16px;
+	}
 }
 
 .profile a {
