@@ -1,12 +1,14 @@
 'use client';
-import { useId, useState } from 'react';
+import { useId, useRef, useState } from 'react';
 import clsx from 'clsx';
-import Link from 'next/link';
 import { CheckoutCartProps } from './CheckoutCart.props';
 import styles from './CheckoutCart.module.css';
 import { CheckoutProductItem, PromocodeInput, Button } from '@/components';
 import { useCartStore } from '@/stores/cartStore';
 import { pluralize } from '@/utils/plural';
+import { checkoutErrorMessage, createCheckoutPayment } from '@/api/checkout';
+import { DELIVERY_FORM_ID } from '@/constants/checkout';
+import { redirectTo } from '@/utils/redirect';
 
 export const CheckoutCart = ({ className, ...props }: CheckoutCartProps) => {
 	const items = useCartStore((s) => s.items);
@@ -16,8 +18,47 @@ export const CheckoutCart = ({ className, ...props }: CheckoutCartProps) => {
 	const isEmpty = items.length === 0;
 
 	const [isOpen, setIsOpen] = useState(false);
+	const [isPaying, setIsPaying] = useState(false);
+	const [error, setError] = useState('');
+	// A redirect leaves the component mounted, so the guard has to outlive the render
+	// that sets `isPaying` — a double click must never open two Stripe sessions.
+	const payingRef = useRef(false);
 	const headerId = useId();
 	const contentId = useId();
+	const errorId = useId();
+
+	const handlePay = async () => {
+		if (payingRef.current || isEmpty) return;
+
+		// The delivery form is a sibling component; validate it exactly as the browser would
+		// on submit, so an incomplete address never reaches Stripe.
+		const form = document.getElementById(DELIVERY_FORM_ID) as HTMLFormElement | null;
+		if (form && !form.reportValidity()) return;
+
+		payingRef.current = true;
+		setIsPaying(true);
+		setError('');
+
+		try {
+			const { url } = await createCheckoutPayment({
+				items: items.map((it) => ({
+					productId: it.product.id,
+					variant: it.color,
+					size: it.size,
+					quantity: it.quantity,
+				})),
+			});
+
+			if (!url) throw new Error('No payment URL');
+
+			// The cart is kept until the payment is confirmed on /checkout/success.
+			redirectTo(url);
+		} catch (err) {
+			setError(checkoutErrorMessage(err));
+			payingRef.current = false;
+			setIsPaying(false);
+		}
+	};
 
 	const handleApply = (code: string) => {
 		// Hook up promocode flow here (server validation, totals update, etc.)
@@ -94,12 +135,31 @@ export const CheckoutCart = ({ className, ...props }: CheckoutCartProps) => {
 							<div>${subtotal.toFixed(2)}</div>
 						</div>
 
-						{/* Continue CTA can stay here (still read-only) */}
-						<Link href="/checkout/payment">
-							<Button className={clsx(styles.proceed, 'wFull')} size="md" color="primary" disabled={isEmpty}>
-								Continue to payment
-							</Button>
-						</Link>
+						<Button
+							type="button"
+							className={clsx(styles.proceed, 'wFull')}
+							size="md"
+							color="primary"
+							disabled={isEmpty || isPaying}
+							aria-busy={isPaying}
+							aria-describedby={error ? errorId : undefined}
+							onClick={handlePay}
+						>
+							{isPaying ? (
+								<span className={clsx(styles.paying)}>
+									<span className={clsx(styles.spinner)} aria-hidden="true" />
+									Redirecting to payment…
+								</span>
+							) : (
+								'Continue to payment'
+							)}
+						</Button>
+
+						{error && (
+							<div id={errorId} className={clsx(styles.error)} role="alert">
+								{error}
+							</div>
+						)}
 					</div>
 				</div>
 			</div>

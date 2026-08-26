@@ -6,6 +6,7 @@ import clsx from 'clsx';
 import { Input } from '@/components/Input/Input';
 import { AddressAutocompleteInput } from '@/components/AddressAutocompleteInput/AddressAutocompleteInput';
 import type { ParsedAddress } from '@/hooks/useAddressAutocomplete';
+import { DELIVERY_FORM_ID } from '@/constants/checkout';
 
 interface FormValues {
 	country: string;
@@ -102,7 +103,7 @@ export const DeliveryForm = ({ children, className, ...props }: DeliveryFormProp
 	};
 
 	return (
-		<form className={clsx(styles.form, className)} autoComplete="off" {...props}>
+		<form id={DELIVERY_FORM_ID} className={clsx(styles.form, className)} autoComplete="off" {...props}>
 			<div className={clsx(styles.field)}>
 				<Input
 					label="Country/Region *"

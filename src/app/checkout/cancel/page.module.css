@@ -1,0 +1,36 @@
+.page {
+	display: flex;
+	flex-direction: column;
+}
+
+.main {
+	max-width: 1300px;
+	width: 100%;
+	flex: 1 1 auto;
+	margin: 0 auto 64px auto;
+}
+
+.card {
+	max-width: 640px;
+	margin: 0 auto;
+	padding: 0 16px;
+	text-align: center;
+}
+
+.text {
+	margin: 24px 0;
+	color: var(--warm-gray);
+	font-size: 16px;
+	line-height: 1.6;
+}
+
+.actions {
+	display: flex;
+	justify-content: center;
+	gap: 16px;
+	flex-wrap: wrap;
+}
+
+.link {
+	display: inline-block;
+}
