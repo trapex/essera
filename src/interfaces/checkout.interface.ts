@@ -9,9 +9,23 @@ export interface CheckoutItemDTO {
 	quantity: number;
 }
 
+// Delivery address stored on the order; it never affects pricing.
+export interface ShippingAddressDTO {
+	country: string;
+	firstName: string;
+	lastName: string;
+	address: string;
+	apartments?: string;
+	city: string;
+	state: string;
+	zip: string;
+	phone: string;
+}
+
 export interface CreateCheckoutPaymentDTO {
 	items: CheckoutItemDTO[];
 	email?: string;        // guest receipt address; ignored when authenticated
+	shipping?: ShippingAddressDTO;
 }
 
 // Everything needed to hand the buyer over to Stripe Checkout.

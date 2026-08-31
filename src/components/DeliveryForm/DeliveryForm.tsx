@@ -1,5 +1,5 @@
 'use client';
-import { ChangeEvent, FocusEvent, useRef, useState } from 'react';
+import { ChangeEvent, FocusEvent, FormEvent, useRef, useState } from 'react';
 import { DeliveryFormProps } from './DeliveryForm.props';
 import styles from './DeliveryForm.module.css';
 import clsx from 'clsx';
@@ -7,30 +7,7 @@ import { Input } from '@/components/Input/Input';
 import { AddressAutocompleteInput } from '@/components/AddressAutocompleteInput/AddressAutocompleteInput';
 import type { ParsedAddress } from '@/hooks/useAddressAutocomplete';
 import { DELIVERY_FORM_ID } from '@/constants/checkout';
-
-interface FormValues {
-	country: string;
-	firstName: string;
-	lastName: string;
-	address: string;
-	apartments: string;
-	city: string;
-	state: string;
-	zip: string;
-	phone: string;
-}
-
-const initialValues: FormValues = {
-	country: 'United States',
-	firstName: '',
-	lastName: '',
-	address: '',
-	apartments: '',
-	city: '',
-	state: '',
-	zip: '',
-	phone: '+1 ',
-};
+import { useCheckoutStore } from '@/stores/checkoutStore';
 
 const PHONE_MAX_DIGITS = 10;
 
@@ -60,14 +37,26 @@ const phoneCaretPosition = (formatted: string, digitsBefore: number): number => 
 	return formatted.length;
 };
 
-export const DeliveryForm = ({ children, className, ...props }: DeliveryFormProps) => {
-	const [values, setValues] = useState<FormValues>(initialValues);
+export const DeliveryForm = ({ children, className, onSubmit, ...props }: DeliveryFormProps) => {
+	// The values live in the checkout store so the order summary can submit them
+	// with the payment instead of reading the DOM.
+	const values = useCheckoutStore((s) => s.delivery);
+	const setDelivery = useCheckoutStore((s) => s.setDelivery);
+	const startPayment = useCheckoutStore((s) => s.startPayment);
 	const [touched, setTouched] = useState<Record<string, boolean>>({});
 	const apartmentsRef = useRef<HTMLInputElement>(null);
 
 	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
-		setValues((prev) => ({ ...prev, [name]: value }));
+		setDelivery({ [name]: value });
+	};
+
+	// Only reached once the browser has validated every field, whether the buyer
+	// pressed Enter or the summary's submit button.
+	const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+		e.preventDefault();
+		onSubmit?.(e);
+		void startPayment();
 	};
 
 	const handleBlur = (e: FocusEvent<HTMLInputElement>) => {
@@ -84,26 +73,46 @@ export const DeliveryForm = ({ children, className, ...props }: DeliveryFormProp
 		const formatted = formatPhone(digits);
 		const newCaret = phoneCaretPosition(formatted, digitsBefore);
 
-		setValues((prev) => ({ ...prev, phone: formatted }));
+		setDelivery({ phone: formatted });
 		window.setTimeout(() => {
 			input.setSelectionRange(newCaret, newCaret);
 		}, 0);
 	};
 
 	const handleAddressSelect = (parsed: ParsedAddress) => {
-		setValues((prev) => ({
-			...prev,
+		setDelivery({
 			address: parsed.address,
 			city: parsed.city,
 			state: parsed.state,
 			zip: parsed.zip,
 			country: 'United States',
-		}));
+		});
 		apartmentsRef.current?.focus();
 	};
 
 	return (
-		<form id={DELIVERY_FORM_ID} className={clsx(styles.form, className)} autoComplete="off" {...props}>
+		<form
+			id={DELIVERY_FORM_ID}
+			className={clsx(styles.form, className)}
+			autoComplete="off"
+			onSubmit={handleSubmit}
+			{...props}
+		>
+			<div className={clsx(styles.field)}>
+				<Input
+					label="Email *"
+					type="email"
+					id="email"
+					name="email"
+					value={values.email}
+					onChange={handleChange}
+					onBlur={handleBlur}
+					required
+					isInvalid={Boolean(touched.email && !values.email)}
+					autoComplete="email"
+					className={styles.control}
+				/>
+			</div>
 			<div className={clsx(styles.field)}>
 				<Input
 					label="Country/Region *"

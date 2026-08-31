@@ -5,6 +5,7 @@ import { persist, createJSONStorage } from 'zustand/middleware';
 import type { ProductItem, Variants } from '@/interfaces/product.interface';
 import type { SizeOption } from '@/interfaces/size.interface';
 import type { CartEntry, CartProduct } from '@/interfaces/cart.interface';
+import { MAX_CHECKOUT_LINES, MAX_LINE_QUANTITY } from '@/constants/checkout';
 
 /** Composite key (not stored) */
 type CartKey = { productId: number; size?: string | null; color?: string | null };
@@ -12,6 +13,9 @@ type CartKey = { productId: number; size?: string | null; color?: string | null 
 /** Build key from productId + size + color */
 const cartKey = ({ productId, size, color }: CartKey) =>
 	[productId, size ?? '', color ?? ''].join('|');
+
+/** Checkout rejects anything above the backend's per-line limit, so the cart never exceeds it. */
+const clampQuantity = (qty: number) => Math.min(qty, MAX_LINE_QUANTITY);
 
 /** discountPrice ?? basePrice */
 const unitPrice = (p: ProductItem) =>
@@ -98,9 +102,14 @@ export const useCartStore = create<CartState>()(
 				);
 
 				if (idx >= 0) {
-					items[idx] = { ...items[idx], quantity: items[idx].quantity + entry.quantity };
+					items[idx] = {
+						...items[idx],
+						quantity: clampQuantity(items[idx].quantity + entry.quantity),
+					};
 				} else {
-					items.push(entry);
+					// Checkout accepts a limited number of distinct lines; ignore the extra ones.
+					if (items.length >= MAX_CHECKOUT_LINES) return;
+					items.push({ ...entry, quantity: clampQuantity(entry.quantity) });
 				}
 				set({ items });
 			},
@@ -127,7 +136,7 @@ export const useCartStore = create<CartState>()(
 				set({
 					items: get().items.map((i) =>
 						cartKey({ productId: i.product.id, size: i.size || null, color: i.color || null }) === key
-							? { ...i, quantity: qty }
+							? { ...i, quantity: clampQuantity(qty) }
 							: i
 					),
 				});

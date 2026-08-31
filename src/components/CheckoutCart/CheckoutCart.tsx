@@ -1,14 +1,13 @@
 'use client';
-import { useId, useRef, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 import clsx from 'clsx';
 import { CheckoutCartProps } from './CheckoutCart.props';
 import styles from './CheckoutCart.module.css';
 import { CheckoutProductItem, PromocodeInput, Button } from '@/components';
 import { useCartStore } from '@/stores/cartStore';
 import { pluralize } from '@/utils/plural';
-import { checkoutErrorMessage, createCheckoutPayment } from '@/api/checkout';
 import { DELIVERY_FORM_ID } from '@/constants/checkout';
-import { redirectTo } from '@/utils/redirect';
+import { useCheckoutStore } from '@/stores/checkoutStore';
 
 export const CheckoutCart = ({ className, ...props }: CheckoutCartProps) => {
 	const items = useCartStore((s) => s.items);
@@ -18,47 +17,25 @@ export const CheckoutCart = ({ className, ...props }: CheckoutCartProps) => {
 	const isEmpty = items.length === 0;
 
 	const [isOpen, setIsOpen] = useState(false);
-	const [isPaying, setIsPaying] = useState(false);
-	const [error, setError] = useState('');
-	// A redirect leaves the component mounted, so the guard has to outlive the render
-	// that sets `isPaying` — a double click must never open two Stripe sessions.
-	const payingRef = useRef(false);
+	// Paying state lives in the checkout store: the delivery form owns the submit,
+	// this component only renders its progress.
+	const isPaying = useCheckoutStore((s) => s.isPaying);
+	const error = useCheckoutStore((s) => s.error);
+	const resetPaying = useCheckoutStore((s) => s.resetPaying);
 	const headerId = useId();
 	const contentId = useId();
 	const errorId = useId();
 
-	const handlePay = async () => {
-		if (payingRef.current || isEmpty) return;
+	// Coming back from Stripe with Back restores this page from the bfcache with the
+	// submit guard still closed, which would leave the button disabled for good.
+	useEffect(() => {
+		const handlePageShow = (event: PageTransitionEvent) => {
+			if (event.persisted) resetPaying();
+		};
 
-		// The delivery form is a sibling component; validate it exactly as the browser would
-		// on submit, so an incomplete address never reaches Stripe.
-		const form = document.getElementById(DELIVERY_FORM_ID) as HTMLFormElement | null;
-		if (form && !form.reportValidity()) return;
-
-		payingRef.current = true;
-		setIsPaying(true);
-		setError('');
-
-		try {
-			const { url } = await createCheckoutPayment({
-				items: items.map((it) => ({
-					productId: it.product.id,
-					variant: it.color,
-					size: it.size,
-					quantity: it.quantity,
-				})),
-			});
-
-			if (!url) throw new Error('No payment URL');
-
-			// The cart is kept until the payment is confirmed on /checkout/success.
-			redirectTo(url);
-		} catch (err) {
-			setError(checkoutErrorMessage(err));
-			payingRef.current = false;
-			setIsPaying(false);
-		}
-	};
+		window.addEventListener('pageshow', handlePageShow);
+		return () => window.removeEventListener('pageshow', handlePageShow);
+	}, [resetPaying]);
 
 	const handleApply = (code: string) => {
 		// Hook up promocode flow here (server validation, totals update, etc.)
@@ -135,15 +112,17 @@ export const CheckoutCart = ({ className, ...props }: CheckoutCartProps) => {
 							<div>${subtotal.toFixed(2)}</div>
 						</div>
 
+						{/* Submits the delivery form, so the browser validates it first and a
+						    missing form simply cannot start a payment. */}
 						<Button
-							type="button"
+							type="submit"
+							form={DELIVERY_FORM_ID}
 							className={clsx(styles.proceed, 'wFull')}
 							size="md"
 							color="primary"
 							disabled={isEmpty || isPaying}
 							aria-busy={isPaying}
 							aria-describedby={error ? errorId : undefined}
-							onClick={handlePay}
 						>
 							{isPaying ? (
 								<span className={clsx(styles.paying)}>
