@@ -152,6 +152,16 @@ header.transparent .logoImg {
 	justify-content: center;
 }
 
+header.transparent .cartBadge {
+	background: var(--silk-white);
+	color: var(--soft-charcoal);
+}
+
+.header.scrolled .cartBadge {
+	background: var(--soft-charcoal);
+	color: var(--white);
+}
+
 /* Search */
 .searchBlock {
 	position: absolute;
