@@ -1,12 +1,13 @@
 'use client';
-import { useId, useState } from 'react';
+import { useEffect, useId, useState } from 'react';
 import clsx from 'clsx';
-import Link from 'next/link';
 import { CheckoutCartProps } from './CheckoutCart.props';
 import styles from './CheckoutCart.module.css';
 import { CheckoutProductItem, PromocodeInput, Button } from '@/components';
 import { useCartStore } from '@/stores/cartStore';
 import { pluralize } from '@/utils/plural';
+import { DELIVERY_FORM_ID } from '@/constants/checkout';
+import { useCheckoutStore } from '@/stores/checkoutStore';
 
 export const CheckoutCart = ({ className, ...props }: CheckoutCartProps) => {
 	const items = useCartStore((s) => s.items);
@@ -16,8 +17,25 @@ export const CheckoutCart = ({ className, ...props }: CheckoutCartProps) => {
 	const isEmpty = items.length === 0;
 
 	const [isOpen, setIsOpen] = useState(false);
+	// Paying state lives in the checkout store: the delivery form owns the submit,
+	// this component only renders its progress.
+	const isPaying = useCheckoutStore((s) => s.isPaying);
+	const error = useCheckoutStore((s) => s.error);
+	const resetPaying = useCheckoutStore((s) => s.resetPaying);
 	const headerId = useId();
 	const contentId = useId();
+	const errorId = useId();
+
+	// Coming back from Stripe with Back restores this page from the bfcache with the
+	// submit guard still closed, which would leave the button disabled for good.
+	useEffect(() => {
+		const handlePageShow = (event: PageTransitionEvent) => {
+			if (event.persisted) resetPaying();
+		};
+
+		window.addEventListener('pageshow', handlePageShow);
+		return () => window.removeEventListener('pageshow', handlePageShow);
+	}, [resetPaying]);
 
 	const handleApply = (code: string) => {
 		// Hook up promocode flow here (server validation, totals update, etc.)
@@ -94,12 +112,33 @@ export const CheckoutCart = ({ className, ...props }: CheckoutCartProps) => {
 							<div>${subtotal.toFixed(2)}</div>
 						</div>
 
-						{/* Continue CTA can stay here (still read-only) */}
-						<Link href="/checkout/payment">
-							<Button className={clsx(styles.proceed, 'wFull')} size="md" color="primary" disabled={isEmpty}>
-								Continue to payment
-							</Button>
-						</Link>
+						{/* Submits the delivery form, so the browser validates it first and a
+						    missing form simply cannot start a payment. */}
+						<Button
+							type="submit"
+							form={DELIVERY_FORM_ID}
+							className={clsx(styles.proceed, 'wFull')}
+							size="md"
+							color="primary"
+							disabled={isEmpty || isPaying}
+							aria-busy={isPaying}
+							aria-describedby={error ? errorId : undefined}
+						>
+							{isPaying ? (
+								<span className={clsx(styles.paying)}>
+									<span className={clsx(styles.spinner)} aria-hidden="true" />
+									Redirecting to payment…
+								</span>
+							) : (
+								'Continue to payment'
+							)}
+						</Button>
+
+						{error && (
+							<div id={errorId} className={clsx(styles.error)} role="alert">
+								{error}
+							</div>
+						)}
 					</div>
 				</div>
 			</div>

@@ -3,7 +3,7 @@
 import clsx from 'clsx';
 import Link from 'next/link';
 import { CartModalProps } from './CartModal.props';
-import styles from './cartModal.module.css';
+import styles from './CartModal.module.css';
 import { Button, CartItem } from '@/components';
 import { useCartStore } from '@/stores/cartStore';
 
